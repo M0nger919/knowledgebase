@@ -1,4 +1,7 @@
 # Deployment Automation Review — Knowbase
+> **Created:** 2026-04-16 | **Author:** Hermes Agent | **Status:** Draft
+
+---
 
 ## Current Workflow (Manual Steps Required)
 
