@@ -13,25 +13,26 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [useMagicLink, setUseMagicLink] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [errors, setErrors] = useState<string[]>([])
   const [magicLinkSent, setMagicLinkSent] = useState(false)
 
-  function validateForm(): string | null {
-    if (!email.trim()) return 'Email is required'
+  function validateForm(): string[] {
+    const validationErrors: string[] = []
+    if (!email.trim()) validationErrors.push('Email is required')
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) return 'Please enter a valid email address'
-    if (!useMagicLink && password.length < 6) return 'Password must be at least 6 characters'
-    return null
+    if (email.trim() && !emailRegex.test(email)) validationErrors.push('Please enter a valid email address')
+    if (!useMagicLink && password.length < 6) validationErrors.push('Password must be at least 6 characters')
+    return validationErrors
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
+    setErrors([])
     setMagicLinkSent(false)
 
-    const validationError = validateForm()
-    if (validationError) {
-      setError(validationError)
+    const validationErrors = validateForm()
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors)
       return
     }
 
@@ -46,7 +47,7 @@ export default function LoginPage() {
       })
       setLoading(false)
       if (error) {
-        setError(error.message)
+        setErrors([error.message])
       } else {
         setMagicLinkSent(true)
       }
@@ -62,11 +63,11 @@ export default function LoginPage() {
 
     if (error) {
       if (error.message === 'Invalid login credentials') {
-        setError('Invalid email or password. Please check your credentials and try again.')
+        setErrors(['Invalid email or password. Please check your credentials and try again.'])
       } else if (error.message.includes('Email not confirmed')) {
-        setError('Please confirm your email address before logging in.')
+        setErrors(['Please confirm your email address before logging in.'])
       } else {
-        setError(error.message)
+        setErrors([error.message])
       }
     } else {
       router.push('/dashboard')
@@ -108,9 +109,13 @@ export default function LoginPage() {
           </div>
         ) : (
           <>
-            {error && (
+            {errors.length > 0 && (
               <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-3">
-                <p className="text-sm text-red-700">{error}</p>
+                <ul className="text-sm text-red-700 list-disc list-inside space-y-1">
+                  {errors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
+                </ul>
               </div>
             )}
 
@@ -171,7 +176,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => {
                   setUseMagicLink(!useMagicLink)
-                  setError(null)
+                  setErrors([])
                 }}
                 className="text-sm text-blue-600 hover:underline"
               >

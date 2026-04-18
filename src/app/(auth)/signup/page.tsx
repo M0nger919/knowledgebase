@@ -14,25 +14,26 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [errors, setErrors] = useState<string[]>([])
 
-  function validateForm(): string | null {
-    if (!displayName.trim()) return 'Display name is required'
-    if (!email.trim()) return 'Email is required'
+  function validateForm(): string[] {
+    const validationErrors: string[] = []
+    if (!displayName.trim()) validationErrors.push('Display name is required')
+    if (!email.trim()) validationErrors.push('Email is required')
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) return 'Please enter a valid email address'
-    if (password.length < 6) return 'Password must be at least 6 characters'
-    if (password !== confirmPassword) return 'Passwords do not match'
-    return null
+    if (email.trim() && !emailRegex.test(email)) validationErrors.push('Please enter a valid email address')
+    if (password.length < 6) validationErrors.push('Password must be at least 6 characters')
+    if (password !== confirmPassword) validationErrors.push('Passwords do not match')
+    return validationErrors
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setError(null)
+    setErrors([])
 
-    const validationError = validateForm()
-    if (validationError) {
-      setError(validationError)
+    const validationErrors = validateForm()
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors)
       return
     }
 
@@ -53,9 +54,9 @@ export default function SignupPage() {
 
     if (error) {
       if (error.message.includes('already registered')) {
-        setError('An account with this email already exists. Try logging in instead.')
+        setErrors(['An account with this email already exists. Try logging in instead.'])
       } else {
-        setError(error.message)
+        setErrors([error.message])
       }
     } else {
       router.push('/dashboard')
@@ -71,9 +72,13 @@ export default function SignupPage() {
           <p className="text-sm text-gray-500 mt-2">Get started with Knowbase for free</p>
         </div>
 
-        {error && (
+        {errors.length > 0 && (
           <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-3">
-            <p className="text-sm text-red-700">{error}</p>
+            <ul className="text-sm text-red-700 list-disc list-inside space-y-1">
+              {errors.map((err, i) => (
+                <li key={i}>{err}</li>
+              ))}
+            </ul>
           </div>
         )}
 
@@ -121,6 +126,7 @@ export default function SignupPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={loading}
             />
+            <p className="text-xs text-gray-400 mt-1">Must be at least 6 characters</p>
           </div>
 
           <div>
