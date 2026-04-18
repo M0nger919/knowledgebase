@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { ingestContent } from "@/lib/ingestion/ingest";
+import { startDocumentPipeline } from "@/lib/queue/pipeline";
 
 export async function POST(request: Request) {
   try {
@@ -48,12 +49,14 @@ export async function POST(request: Request) {
       spaceId: spaceId || undefined,
     });
 
+    // Start background processing pipeline (fire-and-forget)
+    startDocumentPipeline(result.documentId).catch(() => undefined);
+
     return NextResponse.json({
       success: true,
       documentId: result.documentId,
     });
   } catch (error) {
-    console.error("Text ingestion error:", error);
     const message =
       error instanceof Error ? error.message : "Failed to ingest text content";
     return NextResponse.json({ error: message }, { status: 500 });

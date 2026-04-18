@@ -18,3 +18,27 @@ export async function generateEmbedding(text: string): Promise<number[]> {
   });
   return response.data[0].embedding;
 }
+
+export async function generateChatCompletion(
+  prompt: string,
+  system?: string,
+  model: string = "gpt-4o-mini"
+): Promise<string> {
+  const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [];
+  if (system) {
+    messages.push({ role: "system", content: system });
+  }
+  messages.push({ role: "user", content: prompt });
+
+  const response = await getOpenAI().chat.completions.create({
+    model,
+    messages,
+    temperature: 0.3,
+  });
+
+  return response.choices[0]?.message?.content?.trim() ?? "";
+}
+
+export function countTokens(text: string): number {
+  return Math.ceil(text.length / 4);
+}
