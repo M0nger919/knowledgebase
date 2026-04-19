@@ -25,14 +25,14 @@
 
 ### Phase 1: Sprint Planning (PM + You)
 
-1. **PM reviews current sprint status** in PM_BOARD.md
+1. **PM reviews current sprint status** in PROGRESS.md
 2. **PM discusses priorities with you** (Henry) — what to focus on next
 3. **PM writes implementation plan** using writing-plans skill:
    - Bite-sized tasks (2-5 min each)
    - Exact file paths and complete code
    - TDD steps for every code task
 4. **PM creates GitHub Issues** for each task with sprint labels
-5. **PM updates PM_BOARD.md** with sprint tasks
+5. **PM updates PROGRESS.md** with sprint tasks
 
 ### Phase 2: Task Dispatch (Tech Lead)
 
@@ -105,7 +105,7 @@
    - Metrics (files changed, tests added, issues closed)
    - Decisions made this sprint
 2. PM discusses with you: what went well, what to improve
-3. PM updates PM_BOARD.md and PROJECT_PLAN.md
+3. PM updates PROGRESS.md and PROJECT_PLAN.md
 4. PM updates Hermes memory for cross-session continuity
 
 ---
@@ -129,15 +129,17 @@
 Henry (You)
   ↕ Telegram/Discord (daily check-ins, decisions)
 PM (Hermes)
-  ↕ PM_BOARD.md + GitHub Issues (sprint tracking)
+  ↕ PROGRESS.md + GitHub Issues (sprint tracking)
 Tech Lead (Hermes)
   ↕ delegate_task (dispatches work)
-Senior Devs (Claude/Codex/OpenCode)
+Senior Devs (Hermes subagent/Codex/OpenCode)
   ↕ Git commits (produce code)
 Code Reviewer (subagent)
   ↕ Review reports (approve/reject)
+DevOps Engineer (subagent)
+  ↕ ~/projects/DevOps/ (infra verification logs)
 QA Engineer (subagent)
-  ↕ dogfood-output/report.md (bug reports)
+  ↕ dogfood-output/report.md (product bug reports)
 ```
 
 ---
@@ -163,36 +165,13 @@ No code reaches main without passing ALL gates:
 
 ## Current Sprint Assignment
 
-### Sprint 1: Foundation & Auth (IN PROGRESS)
+**See PROGRESS.md for current task status.** That file is the single source of truth — this section only lists the sprint roadmap.
 
-| Task | Role | Status |
-|------|------|--------|
-| Auth UI (signup/login) | Senior Dev A | ✅ Done |
-| Auth session management | Senior Dev A | ✅ Done |
-| Ingestion engine | Senior Dev B | ✅ Done |
-| Background queue setup | DevOps | 🔄 In Progress |
-| QA pass on deployed app | QA Engineer | ⏳ Next |
-
-### Sprint 2: AI Pipeline & Context Engine (UPCOMING)
-
-| Task | Role |
-|------|------|
-| Semantic chunking algorithm | Senior Dev A (Claude) |
-| Hierarchical summary generation | Senior Dev B (Codex) |
-| Entity extraction | Senior Dev C (OpenCode) |
-| Smart context engine (THE CORE) | Senior Dev A (Claude) |
-| Relevance scoring | Senior Dev B (Codex) |
-| Context deduplication | Senior Dev C (OpenCode) |
-
-### Sprint 3: Knowledge Graph & Chat (PLANNED)
-
-| Task | Role |
-|------|------|
-| Relationship detection | Senior Dev A (Claude) |
-| Knowledge graph storage | Senior Dev B (Codex) |
-| Visual graph view | UX Designer |
-| AI chat interface | Senior Dev A (Claude) |
-| Proactive suggestions | Senior Dev B (Codex) |
+### Sprint 1: Foundation & Auth — ✅ COMPLETE
+### Sprint 2: AI Pipeline & Context Engine — 🔄 IN PROGRESS
+### Sprint 3: Knowledge Graph & Chat — ⏳ PLANNED
+### Sprint 4: Dashboard & API — ⏳ PLANNED
+### Sprint 5: Launch Prep — ⏳ PLANNED
 
 ---
 
@@ -204,4 +183,4 @@ No code reaches main without passing ALL gates:
 4. **Fail closed** — if review can't parse result, it's a fail
 5. **Max 2 fix cycles** — if code can't pass review after 2 attempts, escalate to Henry
 6. **Commit after every task** — small commits, easy to revert
-7. **Track everything** — PM_BOARD.md + GitHub Issues + Hermes memory
+7. **Track everything** — PROGRESS.md + GitHub Issues + Hermes memory + ~/projects/DevOps/

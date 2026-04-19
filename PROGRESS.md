@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 22:40 (HKT)
-Latest commit: e37e526 — feat: switch to OpenRouter API
+Last updated: 2026-04-19 23:00 (HKT)
+Latest commit: 1755ee5 — docs: add DevOps verification gate to workflow
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
@@ -84,7 +84,7 @@ Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 ---
 
 ## Blockers
-None — all clear ✅
+- **Migration 002_jobs.sql NOT applied** — `processing_jobs` table and 5 document columns (one_liner, short_summary, key_points, processing_status, entities) missing from production DB. Entire AI pipeline will fail. Run in Supabase SQL editor.
 
 ---
 
@@ -110,12 +110,12 @@ None — all clear ✅
 |------|---------|
 | src/lib/queue/worker.ts | Job queue: create, process, retry logic — all 6 AI stages wired |
 | src/lib/queue/pipeline.ts | Pipeline orchestrator: 6 stages per document |
-| src/lib/ai/chunker.ts | Semantic chunking (ready to wire) |
-| src/lib/ai/summarizer.ts | Hierarchical summaries (ready to wire) |
-| src/lib/ai/entities.ts | Named entity extraction (ready to wire) |
-| src/lib/ai/tagger.ts | Auto-tagging (ready to wire) |
-| src/lib/ai/space-suggester.ts | Space suggestion (ready to wire) |
-| src/lib/openai.ts | OpenAI client: embeddings + chat completions |
+| src/lib/ai/chunker.ts | Semantic chunking (~500 token target chunks) |
+| src/lib/ai/summarizer.ts | Hierarchical summaries (1-liner, short, key points) |
+| src/lib/ai/entities.ts | Named entity extraction (person, org, project, concept, date) |
+| src/lib/ai/tagger.ts | Auto-tagging (up to 10 tags, merge with existing) |
+| src/lib/ai/space-suggester.ts | Space suggestion (auto-move if confidence > 0.7) |
+| src/lib/openai.ts | OpenRouter client: Gemma 3 free for chat, OpenAI embeddings via OpenRouter |
 | src/lib/ingestion/ingest.ts | Document ingestion into Supabase |
 | src/lib/ingestion/url-parser.ts | URL fetch + HTML→Markdown |
 | src/lib/ingestion/file-parser.ts | PDF/DOCX/MD/TXT parsing |
