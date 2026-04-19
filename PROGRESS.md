@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
 Last updated: 2026-04-19 23:15 (HKT)
-Latest commit: 837c321 — docs: workflow review fixes
+Latest commit: bf75585 — docs: update PROGRESS.md — migration 002 applied, blockers cleared
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
