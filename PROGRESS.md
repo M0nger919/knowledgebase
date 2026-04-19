@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 20:46 (HKT)
-Latest commit: 813a65d — chore: remove environment info from dev page
+Last updated: 2026-04-19 23:47 (HKT)
+Latest commit: 727913d — chore: remove login/signup from public navbar (under construction)
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
