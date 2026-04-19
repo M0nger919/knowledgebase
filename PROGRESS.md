@@ -1,9 +1,14 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 16:45 (HKT)
-Latest commit: pending — feat: wire AI pipeline
+Last updated: 2026-04-19 22:40 (HKT)
+Latest commit: e37e526 — feat: switch to OpenRouter API
 Unpushed changes: no
-Deployed to Vercel: yes (auto-deploy from main)
+Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
+
+## Deployment Log
+| Date | Commit | What | Result |
+|------|--------|------|--------|
+| 2026-04-19 22:40 | e37e526 | Vercel env updated (OPENROUTER_API_KEY) + Supabase migration 003 run | ✅ All blockers cleared, AI pipeline ready for E2E test |
 
 ---
 
@@ -31,7 +36,7 @@ Deployed to Vercel: yes (auto-deploy from main)
 | 2.4 | Wire entity extraction job | Senior Dev A | ✅ Done | extractEntities() → updates documents.entities JSONB |
 | 2.5 | Wire tagging job | Senior Dev B | ✅ Done | generateTags() → updates documents.tags TEXT[] |
 | 2.6 | Wire space suggestion job | Senior Dev C | ✅ Done | suggestSpace() → auto-moves doc if confidence > 0.7 |
-| 2.7 | Add OPENAI_API_KEY to Vercel env | DevOps | ⏳ Todo | Key not in .env.local — all AI calls will fail until this is added |
+| 2.7 | Switch to OpenRouter API | DevOps | ✅ Done | Switched to OpenRouter API (free Gemma for chat, cheap OpenAI embeddings) |
 | 2.8 | Document processing status UI | UX | ⏳ Todo | Show processing pipeline status on document page |
 | 2.9 | QA pass on AI pipeline | QA Engineer | ⏳ Todo | Test full pipeline end-to-end after wiring |
 
@@ -79,7 +84,7 @@ Deployed to Vercel: yes (auto-deploy from main)
 ---
 
 ## Blockers
-- **OPENAI_API_KEY not set** — All AI pipeline jobs (embed, summarize, entities, tags, space suggestion) will fail. Key needs to be added to Vercel environment variables AND .env.local for local dev.
+None — all clear ✅
 
 ---
 
@@ -92,6 +97,7 @@ Deployed to Vercel: yes (auto-deploy from main)
 | Date | Decision | By |
 |------|----------|----|
 | 2026-04-19 | Senior Dev A switched from Claude Code to Hermes subagent (glm-5.1) | Henry |
+| 2026-04-19 | Use OpenRouter instead of direct OpenAI API (free models for chat, cheap embeddings) | Henry + AI |
 | 2026-04-18 | Core feature: Auto-organize + AI agent native | Henry |
 | 2026-04-18 | Pivot to "Context layer for AI agents" | Henry + AI |
 | 2026-04-16 | Next.js 15 + Supabase | Henry + AI |
