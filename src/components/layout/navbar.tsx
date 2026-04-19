@@ -56,20 +56,6 @@ export function Navbar() {
           <Link href="/" className="text-xl font-bold text-gray-900">
             Knowbase
           </Link>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center font-medium rounded-lg px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center font-medium rounded-lg px-3 py-1.5 text-sm bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-            >
-              Sign up
-            </Link>
-          </div>
         </nav>
       </header>
     )
