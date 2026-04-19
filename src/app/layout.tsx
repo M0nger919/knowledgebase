@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Knowbase — Your AI-powered knowledge base",
+  title: "Knowbase — Coming Soon",
   description:
-    "Organize, search, and discover your knowledge with AI-powered embeddings.",
+    "The context layer between your knowledge and your AI agents. Auto-organize, semantic search, and AI-native knowledge management.",
 };
 
 export default function RootLayout({
