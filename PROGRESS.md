@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 23:47 (HKT)
-Latest commit: 727913d — chore: remove login/signup from public navbar (under construction)
+Last updated: 2026-04-20 02:48 (HKT)
+Latest commit: d3c58cc — chore: sync PROGRESS.md commit hash to HEAD
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
