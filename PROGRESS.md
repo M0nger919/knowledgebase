@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 23:00 (HKT)
-Latest commit: 1755ee5 — docs: add DevOps verification gate to workflow
+Last updated: 2026-04-19 23:10 (HKT)
+Latest commit: 837c321 — docs: workflow review fixes
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
