@@ -1,4 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import { chunkDocument } from "@/lib/ai/chunker";
+import { generateHierarchicalSummary } from "@/lib/ai/summarizer";
+import { extractEntities } from "@/lib/ai/entities";
+import { generateTags } from "@/lib/ai/tagger";
+import { suggestSpace } from "@/lib/ai/space-suggester";
+import { generateEmbedding } from "@/lib/openai";
 
 // ---- Types ----
 
@@ -144,40 +150,272 @@ export async function processNextJob(): Promise<boolean> {
   }
 }
 
-// ---- Stub job processor ----
+// ---- Job processor ----
+
+const EMBED_DELAY_MS = 100; // rate-limit guard between embedding calls
 
 async function processJobType(
   type: JobType,
-  _documentId: string,
+  documentId: string,
 ): Promise<unknown> {
   switch (type) {
-    case "chunk":
-      // TODO: const chunks = await chunkDocument(content); save to document_embeddings
-      return { stub: true, chunksCreated: 0 };
+    // ─── CHUNK ────────────────────────────────────────────────────
+    case "chunk": {
+      const supabase = await createClient();
 
-    case "summarize":
-      // TODO: const summary = await generateHierarchicalSummary(title, content);
-      // update documents: one_liner, short_summary, key_points
-      return { stub: true, summarized: true };
+      const { data: doc, error: fetchErr } = await supabase
+        .from("documents")
+        .select("id, content, text_content")
+        .eq("id", documentId)
+        .single();
 
-    case "embed":
-      // TODO: for each chunk, await generateEmbedding(chunk); update document_embeddings.embedding
-      return { stub: true, embedded: 0 };
+      if (fetchErr || !doc) {
+        throw new Error(`Document ${documentId} not found: ${fetchErr?.message}`);
+      }
 
-    case "extract_entities":
-      // TODO: const entities = await extractEntities(content);
-      // update documents: entities column
-      return { stub: true, entitiesExtracted: 0 };
+      const rawContent = doc.text_content ?? doc.content ?? "";
+      if (!rawContent.trim()) {
+        return { chunksCreated: 0 };
+      }
 
-    case "tag":
-      // TODO: const tags = await generateTags(title, content, existingTags);
-      // update documents: tags column
-      return { stub: true, tagsGenerated: 0 };
+      const chunks = await chunkDocument(rawContent);
 
-    case "suggest_space":
-      // TODO: const suggestion = await suggestSpace(title, content, existingSpaces);
-      // if high confidence, optionally move document
-      return { stub: true, suggested: true };
+      if (chunks.length === 0) {
+        return { chunksCreated: 0 };
+      }
+
+      const rows = chunks.map((c) => ({
+        document_id: documentId,
+        chunk_index: c.index,
+        content: c.content,
+        token_count: c.tokenCount,
+      }));
+
+      const { error: insertErr } = await supabase
+        .from("document_chunks")
+        .insert(rows);
+
+      if (insertErr) {
+        throw new Error(`Failed to insert chunks: ${insertErr.message}`);
+      }
+
+      return { chunksCreated: chunks.length };
+    }
+
+    // ─── SUMMARIZE ────────────────────────────────────────────────
+    case "summarize": {
+      const supabase = await createClient();
+
+      const { data: doc, error: fetchErr } = await supabase
+        .from("documents")
+        .select("id, title, content, text_content")
+        .eq("id", documentId)
+        .single();
+
+      if (fetchErr || !doc) {
+        throw new Error(`Document ${documentId} not found: ${fetchErr?.message}`);
+      }
+
+      const rawContent = doc.text_content ?? doc.content ?? "";
+      const summary = await generateHierarchicalSummary(doc.title ?? "", rawContent);
+
+      const { error: updateErr } = await supabase
+        .from("documents")
+        .update({
+          one_liner: summary.oneLiner,
+          short_summary: summary.shortSummary,
+          key_points: summary.keyPoints,
+        })
+        .eq("id", documentId);
+
+      if (updateErr) {
+        throw new Error(`Failed to update summary: ${updateErr.message}`);
+      }
+
+      return { summarized: true };
+    }
+
+    // ─── EMBED ────────────────────────────────────────────────────
+    case "embed": {
+      const supabase = await createClient();
+
+      const { data: chunks, error: fetchErr } = await supabase
+        .from("document_chunks")
+        .select("id, content")
+        .eq("document_id", documentId)
+        .order("chunk_index", { ascending: true });
+
+      if (fetchErr) {
+        throw new Error(`Failed to fetch chunks: ${fetchErr.message}`);
+      }
+
+      if (!chunks || chunks.length === 0) {
+        return { embedded: 0 };
+      }
+
+      let embeddedCount = 0;
+      for (const chunk of chunks) {
+        try {
+          const embedding = await generateEmbedding(chunk.content);
+
+          const { error: updateErr } = await supabase
+            .from("document_chunks")
+            .update({ embedding })
+            .eq("id", chunk.id);
+
+          if (updateErr) {
+            console.error(
+              `Failed to update embedding for chunk ${chunk.id}: ${updateErr.message}`,
+            );
+          } else {
+            embeddedCount++;
+          }
+        } catch (err) {
+          console.error(
+            `Failed to generate embedding for chunk ${chunk.id}:`,
+            err,
+          );
+        }
+
+        // Rate-limit guard for OpenAI
+        if (embeddedCount < chunks.length) {
+          await new Promise((r) => setTimeout(r, EMBED_DELAY_MS));
+        }
+      }
+
+      return { embedded: embeddedCount };
+    }
+
+    // ─── EXTRACT ENTITIES ─────────────────────────────────────────
+    case "extract_entities": {
+      const supabase = await createClient();
+
+      const { data: doc, error: fetchErr } = await supabase
+        .from("documents")
+        .select("id, content, text_content")
+        .eq("id", documentId)
+        .single();
+
+      if (fetchErr || !doc) {
+        throw new Error(`Document ${documentId} not found: ${fetchErr?.message}`);
+      }
+
+      const rawContent = doc.text_content ?? doc.content ?? "";
+      if (!rawContent.trim()) {
+        return { entitiesExtracted: 0 };
+      }
+
+      const entities = await extractEntities(rawContent);
+
+      const { error: updateErr } = await supabase
+        .from("documents")
+        .update({ entities: entities as unknown as Record<string, unknown> })
+        .eq("id", documentId);
+
+      if (updateErr) {
+        throw new Error(`Failed to update entities: ${updateErr.message}`);
+      }
+
+      return { entitiesExtracted: entities.length };
+    }
+
+    // ─── TAG ──────────────────────────────────────────────────────
+    case "tag": {
+      const supabase = await createClient();
+
+      const { data: doc, error: fetchErr } = await supabase
+        .from("documents")
+        .select("id, title, content, text_content, tags")
+        .eq("id", documentId)
+        .single();
+
+      if (fetchErr || !doc) {
+        throw new Error(`Document ${documentId} not found: ${fetchErr?.message}`);
+      }
+
+      const rawContent = doc.text_content ?? doc.content ?? "";
+      const existingTags: string[] = Array.isArray(doc.tags) ? doc.tags : [];
+
+      const tags = await generateTags(
+        doc.title ?? "",
+        rawContent,
+        existingTags,
+      );
+
+      const { error: updateErr } = await supabase
+        .from("documents")
+        .update({ tags })
+        .eq("id", documentId);
+
+      if (updateErr) {
+        throw new Error(`Failed to update tags: ${updateErr.message}`);
+      }
+
+      return { tagsGenerated: tags.length };
+    }
+
+    // ─── SUGGEST SPACE ────────────────────────────────────────────
+    case "suggest_space": {
+      const supabase = await createClient();
+
+      const { data: doc, error: fetchErr } = await supabase
+        .from("documents")
+        .select("id, title, content, text_content, owner_id, space_id")
+        .eq("id", documentId)
+        .single();
+
+      if (fetchErr || !doc) {
+        throw new Error(`Document ${documentId} not found: ${fetchErr?.message}`);
+      }
+
+      const rawContent = doc.text_content ?? doc.content ?? "";
+
+      // Fetch user's existing spaces
+      const { data: spaces, error: spacesErr } = await supabase
+        .from("spaces")
+        .select("id, name, description")
+        .eq("owner_id", doc.owner_id);
+
+      if (spacesErr) {
+        throw new Error(`Failed to fetch spaces: ${spacesErr.message}`);
+      }
+
+      const existingSpaces = (spaces ?? []).map((s) => ({
+        id: s.id,
+        name: s.name,
+        description: s.description ?? "",
+      }));
+
+      const suggestion = await suggestSpace(
+        doc.title ?? "",
+        rawContent,
+        existingSpaces,
+      );
+
+      // If high confidence and a valid space, move the document
+      if (
+        suggestion.confidence > 0.7 &&
+        suggestion.spaceId &&
+        suggestion.spaceId !== doc.space_id
+      ) {
+        const { error: updateErr } = await supabase
+          .from("documents")
+          .update({ space_id: suggestion.spaceId })
+          .eq("id", documentId);
+
+        if (updateErr) {
+          console.error(
+            `Failed to move document to space ${suggestion.spaceId}: ${updateErr.message}`,
+          );
+        }
+      }
+
+      return {
+        suggested: true,
+        spaceName: suggestion.spaceName,
+        confidence: suggestion.confidence,
+      };
+    }
 
     default:
       throw new Error(`Unknown job type: ${type}`);

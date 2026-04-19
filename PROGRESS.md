@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 16:30 (HKT)
-Latest commit: 7d40118 — feat: Sprint 2 — AI pipeline + processing queue
+Last updated: 2026-04-19 16:45 (HKT)
+Latest commit: pending — feat: wire AI pipeline
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main)
 
@@ -25,12 +25,12 @@ Deployed to Vercel: yes (auto-deploy from main)
 
 | # | Task | Role | Status | Note |
 |---|------|------|--------|------|
-| 2.1 | Wire chunk job to real chunker | Senior Dev A | ⏳ Todo | chunkDocument() exists in src/lib/ai/chunker.ts but worker.ts uses stub |
-| 2.2 | Wire summarize job to real summarizer | Senior Dev B | ⏳ Todo | generateHierarchicalSummary() exists in src/lib/ai/summarizer.ts but stub in worker |
-| 2.3 | Wire embed job to real OpenAI embeddings | Senior Dev C | ⏳ Todo | generateEmbedding() exists in src/lib/openai.ts but stub in worker |
-| 2.4 | Wire entity extraction job | Senior Dev A | ⏳ Todo | extractEntities() exists in src/lib/ai/entities.ts but stub in worker |
-| 2.5 | Wire tagging job | Senior Dev B | ⏳ Todo | generateTags() exists in src/lib/ai/tagger.ts but stub in worker |
-| 2.6 | Wire space suggestion job | Senior Dev C | ⏳ Todo | suggestSpace() exists in src/lib/ai/space-suggester.ts but stub in worker |
+| 2.1 | Wire chunk job to real chunker | Senior Dev A | ✅ Done | chunkDocument() → inserts into document_chunks table |
+| 2.2 | Wire summarize job to real summarizer | Senior Dev B | ✅ Done | generateHierarchicalSummary() → updates one_liner, short_summary, key_points |
+| 2.3 | Wire embed job to real OpenAI embeddings | Senior Dev C | ✅ Done | generateEmbedding() per chunk with 100ms rate-limit guard |
+| 2.4 | Wire entity extraction job | Senior Dev A | ✅ Done | extractEntities() → updates documents.entities JSONB |
+| 2.5 | Wire tagging job | Senior Dev B | ✅ Done | generateTags() → updates documents.tags TEXT[] |
+| 2.6 | Wire space suggestion job | Senior Dev C | ✅ Done | suggestSpace() → auto-moves doc if confidence > 0.7 |
 | 2.7 | Add OPENAI_API_KEY to Vercel env | DevOps | ⏳ Todo | Key not in .env.local — all AI calls will fail until this is added |
 | 2.8 | Document processing status UI | UX | ⏳ Todo | Show processing pipeline status on document page |
 | 2.9 | QA pass on AI pipeline | QA Engineer | ⏳ Todo | Test full pipeline end-to-end after wiring |
@@ -102,7 +102,7 @@ Deployed to Vercel: yes (auto-deploy from main)
 ## File Map (key files)
 | File | Purpose |
 |------|---------|
-| src/lib/queue/worker.ts | Job queue: create, process, retry logic (STUBS need wiring) |
+| src/lib/queue/worker.ts | Job queue: create, process, retry logic — all 6 AI stages wired |
 | src/lib/queue/pipeline.ts | Pipeline orchestrator: 6 stages per document |
 | src/lib/ai/chunker.ts | Semantic chunking (ready to wire) |
 | src/lib/ai/summarizer.ts | Hierarchical summaries (ready to wire) |
