@@ -1,6 +1,6 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 23:10 (HKT)
+Last updated: 2026-04-19 23:15 (HKT)
 Latest commit: 837c321 — docs: workflow review fixes
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
@@ -8,7 +8,7 @@ Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 ## Deployment Log
 | Date | Commit | What | Result |
 |------|--------|------|--------|
-| 2026-04-19 22:40 | e37e526 | Vercel env updated (OPENROUTER_API_KEY) + Supabase migration 003 run | ✅ All blockers cleared, AI pipeline ready for E2E test |
+| 2026-04-19 23:15 | — | Migration 002_jobs.sql applied (processing_jobs table + 5 doc columns + indexes + RLS) | ✅ Verified: table, columns, indexes all present |
 
 ---
 
@@ -84,7 +84,7 @@ Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 ---
 
 ## Blockers
-- **Migration 002_jobs.sql NOT applied** — `processing_jobs` table and 5 document columns (one_liner, short_summary, key_points, processing_status, entities) missing from production DB. Entire AI pipeline will fail. Run in Supabase SQL editor.
+- None — all migrations applied, AI pipeline unblocked.
 
 ---
 
