@@ -6,7 +6,7 @@
 |------|-------|--------|-----------------|
 | Product Manager | Hermes (orchestrator) | ai-project-management, github-issues, writing-plans | Sprint planning, tracking, reporting |
 | Tech Lead | Hermes (orchestrator) | subagent-driven-development, systematic-debugging | Task dispatch, parallel coordination, debugging |
-| Senior Dev A | Claude Code | claude-code | Complex features, architecture decisions, refactoring |
+| Senior Dev A | Hermes subagent (glm-5.1) | — | Complex features, architecture decisions, refactoring |
 | Senior Dev B | Codex | codex | Quick implementations, batch fixes, API routes |
 | Senior Dev C | OpenCode | opencode | Open-source tasks, long sessions, feature implementation |
 | Code Reviewer | Independent subagent | requesting-code-review, github-code-review | Security scan, quality gate, spec compliance |
