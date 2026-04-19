@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-19 17:46 (HKT)
-Latest commit: fd8c3be — docs: update latest commit ref
+Last updated: 2026-04-19 20:46 (HKT)
+Latest commit: 813a65d — chore: remove environment info from dev page
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
@@ -132,3 +132,5 @@ Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 - **Supabase project:** ytvvmxxglbulcyzmagsv
 - **Vercel:** Connected (auto-deploy on push to main)
 - **Stack:** Next.js 16.2.4, TypeScript, Tailwind 4, Supabase, OpenAI
+
+
