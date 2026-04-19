@@ -104,18 +104,7 @@ export default function DevPage() {
           ))}
         </div>
 
-        {/* Environment info */}
-        <div className="mt-10 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950">
-          <h3 className="text-sm font-semibold text-amber-800 dark:text-amber-300">
-            Environment Info
-          </h3>
-          <ul className="mt-2 space-y-1 text-xs text-amber-700 dark:text-amber-400">
-            <li>Domain: quantafelis.org</li>
-            <li>Deploy: Vercel (auto-deploy on push to main)</li>
-            <li>DB: Supabase (ytvvmxxglbulcyzmagsv)</li>
-            <li>Repo: github.com/M0nger919/knowledgebase</li>
-          </ul>
-        </div>
+
       </section>
     </div>
   );
