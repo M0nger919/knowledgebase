@@ -1,0 +1,128 @@
+# Knowbase — Development Progress
+
+Last updated: 2026-04-19 16:30 (HKT)
+Latest commit: 7d40118 — feat: Sprint 2 — AI pipeline + processing queue
+Unpushed changes: no
+Deployed to Vercel: yes (auto-deploy from main)
+
+---
+
+## Sprint 1: Foundation & Auth
+**Status:** ✅ Complete | **Start:** 2026-04-18 | **End:** 2026-04-19
+
+| # | Task | Role | Status | Note |
+|---|------|------|--------|------|
+| 1.1 | Auth UI (signup/login) | Senior Dev A | ✅ Done | Email + magic link, client components with validation |
+| 1.2 | Auth session management | Senior Dev A | ✅ Done | Supabase onAuthStateChange, server-side auth-guard |
+| 1.3 | Ingestion engine (text/URL/file) | Senior Dev B | ✅ Done | 3 API routes + ingest-panel with drag-and-drop |
+| 1.4 | Background processing queue | DevOps | ✅ Done | processing_jobs table, pipeline.ts, worker.ts with 6-stage pipeline |
+| 1.5 | QA pass on deployed app | QA Engineer | ✅ Done | 5 bugs found and fixed (commit f1c92ff) |
+
+---
+
+## Sprint 2: AI Pipeline & Context Engine
+**Status:** 🔄 In Progress | **Start:** 2026-04-19
+
+| # | Task | Role | Status | Note |
+|---|------|------|--------|------|
+| 2.1 | Wire chunk job to real chunker | Senior Dev A | ⏳ Todo | chunkDocument() exists in src/lib/ai/chunker.ts but worker.ts uses stub |
+| 2.2 | Wire summarize job to real summarizer | Senior Dev B | ⏳ Todo | generateHierarchicalSummary() exists in src/lib/ai/summarizer.ts but stub in worker |
+| 2.3 | Wire embed job to real OpenAI embeddings | Senior Dev C | ⏳ Todo | generateEmbedding() exists in src/lib/openai.ts but stub in worker |
+| 2.4 | Wire entity extraction job | Senior Dev A | ⏳ Todo | extractEntities() exists in src/lib/ai/entities.ts but stub in worker |
+| 2.5 | Wire tagging job | Senior Dev B | ⏳ Todo | generateTags() exists in src/lib/ai/tagger.ts but stub in worker |
+| 2.6 | Wire space suggestion job | Senior Dev C | ⏳ Todo | suggestSpace() exists in src/lib/ai/space-suggester.ts but stub in worker |
+| 2.7 | Add OPENAI_API_KEY to Vercel env | DevOps | ⏳ Todo | Key not in .env.local — all AI calls will fail until this is added |
+| 2.8 | Document processing status UI | UX | ⏳ Todo | Show processing pipeline status on document page |
+| 2.9 | QA pass on AI pipeline | QA Engineer | ⏳ Todo | Test full pipeline end-to-end after wiring |
+
+---
+
+## Sprint 3: Knowledge Graph & Chat
+**Status:** ⏳ Upcoming | **Target start:** 2026-05-10
+
+| # | Task | Role | Status | Note |
+|---|------|------|--------|------|
+| 3.1 | Relationship detection | Senior Dev A | ⏳ Todo | |
+| 3.2 | Knowledge graph storage | Senior Dev B | ⏳ Todo | |
+| 3.3 | Visual graph view | UX Designer | ⏳ Todo | |
+| 3.4 | AI chat interface | Senior Dev A | ⏳ Todo | |
+| 3.5 | Proactive suggestions | Senior Dev B | ⏳ Todo | |
+
+---
+
+## Sprint 4: Dashboard & API
+**Status:** ⏳ Planned | **Target start:** 2026-05-24
+
+| # | Task | Role | Status | Note |
+|---|------|------|--------|------|
+| 4.1 | Dashboard with auto-spaces view | UX | ⏳ Todo | |
+| 4.2 | AI insights panel | UX | ⏳ Todo | |
+| 4.3 | Context profile system | Senior Dev A | ⏳ Todo | |
+| 4.4 | REST API for agent integration | Senior Dev B | ⏳ Todo | |
+| 4.5 | Python + TypeScript SDK | Senior Dev C | ⏳ Todo | |
+| 4.6 | Webhook support | DevOps | ⏳ Todo | |
+
+---
+
+## Sprint 5: Launch Prep
+**Status:** ⏳ Planned | **Target start:** 2026-06-07
+
+| # | Task | Role | Status | Note |
+|---|------|------|--------|------|
+| 5.1 | Sentry error monitoring | DevOps | ⏳ Todo | |
+| 5.2 | Stripe payment integration | DevOps | ⏳ Todo | |
+| 5.3 | Landing page final polish | UX | ⏳ Todo | |
+| 5.4 | Terms of service + privacy policy | — | ⏳ Todo | |
+| 5.5 | Beta testing | QA Engineer | ⏳ Todo | |
+| 5.6 | Public launch | — | ⏳ Todo | |
+
+---
+
+## Blockers
+- **OPENAI_API_KEY not set** — All AI pipeline jobs (embed, summarize, entities, tags, space suggestion) will fail. Key needs to be added to Vercel environment variables AND .env.local for local dev.
+
+---
+
+## Open Questions
+- Should we use Supabase Edge Functions or Vercel Cron for the worker loop? Current implementation processes jobs inline during API requests (fire-and-forget), which may time out on Vercel's serverless limits for large documents.
+
+---
+
+## Key Decisions (latest first)
+| Date | Decision | By |
+|------|----------|----|
+| 2026-04-19 | Senior Dev A switched from Claude Code to Hermes subagent (glm-5.1) | Henry |
+| 2026-04-18 | Core feature: Auto-organize + AI agent native | Henry |
+| 2026-04-18 | Pivot to "Context layer for AI agents" | Henry + AI |
+| 2026-04-16 | Next.js 15 + Supabase | Henry + AI |
+| 2026-04-16 | OpenAI embeddings (text-embedding-3-small) | AI |
+
+---
+
+## File Map (key files)
+| File | Purpose |
+|------|---------|
+| src/lib/queue/worker.ts | Job queue: create, process, retry logic (STUBS need wiring) |
+| src/lib/queue/pipeline.ts | Pipeline orchestrator: 6 stages per document |
+| src/lib/ai/chunker.ts | Semantic chunking (ready to wire) |
+| src/lib/ai/summarizer.ts | Hierarchical summaries (ready to wire) |
+| src/lib/ai/entities.ts | Named entity extraction (ready to wire) |
+| src/lib/ai/tagger.ts | Auto-tagging (ready to wire) |
+| src/lib/ai/space-suggester.ts | Space suggestion (ready to wire) |
+| src/lib/openai.ts | OpenAI client: embeddings + chat completions |
+| src/lib/ingestion/ingest.ts | Document ingestion into Supabase |
+| src/lib/ingestion/url-parser.ts | URL fetch + HTML→Markdown |
+| src/lib/ingestion/file-parser.ts | PDF/DOCX/MD/TXT parsing |
+| src/app/api/ingest/*/route.ts | 3 ingestion API routes |
+| src/app/api/jobs/status/route.ts | Job status polling endpoint |
+| supabase/migrations/002_jobs.sql | processing_jobs table + document columns |
+
+---
+
+## Environment
+- **Repo:** github.com/M0nger919/knowledgebase
+- **Branch:** main
+- **Domain:** quantafelis.org
+- **Supabase project:** ytvvmxxglbulcyzmagsv
+- **Vercel:** Connected (auto-deploy on push to main)
+- **Stack:** Next.js 16.2.4, TypeScript, Tailwind 4, Supabase, OpenAI
