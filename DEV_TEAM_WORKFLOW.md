@@ -10,9 +10,14 @@
 | Senior Dev B | Codex | codex | Quick implementations, batch fixes, API routes |
 | Senior Dev C | OpenCode | opencode | Open-source tasks, long sessions, feature implementation |
 | Code Reviewer | Independent subagent | requesting-code-review, github-code-review | Security scan, quality gate, spec compliance |
-| QA Engineer | Independent subagent | dogfood, test-driven-development | TDD enforcement, exploratory testing, bug reports |
-| DevOps Engineer | Hermes + subagents | webhook-subscriptions, saas-bootstrap | CI/CD, monitoring, infrastructure |
+| QA Engineer | Independent subagent | dogfood, test-driven-development | Product feature testing, user flows, UI/UX validation, edge cases |
+| DevOps Engineer | Hermes + subagents | infra-verification, webhook-subscriptions, saas-bootstrap | Migration verification, env var tracking, deployment health, infra logging |
 | UX Designer | Hermes + subagents | popular-web-designs, excalidraw | Design system, wireframes, diagrams |
+
+**IMPORTANT — DevOps vs QA separation:**
+- **DevOps** owns infrastructure: migrations, env vars, deployment health. Runs BEFORE a task is marked Done.
+- **QA** owns product quality: user flows, UI testing, feature completeness. Runs AFTER infra is verified.
+- **Rule: DevOps gate must pass before QA gate runs.**
 
 ---
 
@@ -60,9 +65,18 @@
 │     - APPROVED or REQUEST_CHANGES           │
 │     - If issues → fixer agent → recheck     │
 │                                             │
-│  4. MARK COMPLETE                           │
+│  4. DEVOPS VERIFICATION (if infra impact)   │
+│     - Runs infra-verification skill         │
+│     - Verify migrations applied to prod DB  │
+│     - Verify env vars set on Vercel         │
+│     - Verify deployment health              │
+│     - Log results to ~/projects/DevOps/     │
+│     - PASS/FAIL/PARTIAL verdict             │
+│                                             │
+│  5. MARK COMPLETE                           │
 │     - Close GitHub issue                    │
-│     - Update todo list                      │
+│     - Update todo list + PROGRESS.md        │
+│     - ONLY if all above gates pass          │
 │                                             │
 └─────────────────────────────────────────────┘
 ```
@@ -137,7 +151,13 @@ No code reaches main without passing ALL gates:
 3. **Security Gate** — No hardcoded secrets, no injection vulnerabilities
 4. **Quality Gate** — Clean code, proper error handling, no debug prints
 5. **Regression Gate** — All existing tests still pass
-6. **QA Gate** — Dogfood testing on deployed app passes
+6. **DevOps Gate** — Migrations applied, env vars set, deployment healthy (infra tasks ONLY)
+7. **QA Gate** — Dogfood testing on deployed app passes (product features ONLY)
+
+**Gate ordering:**
+- Gates 1–5 apply to ALL tasks
+- Gate 6 (DevOps) runs after code review, BEFORE task is marked Done, for any task with infra impact
+- Gate 7 (QA) runs at sprint end, AFTER all infra is verified
 
 ---
 
