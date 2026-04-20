@@ -1,7 +1,7 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-20 14:52 (HKT)
-Latest commit: f2aed19 — chore: sync PROGRESS.md after push
+Last updated: 2026-04-20 17:52 (HKT)
+Latest commit: d59fdb1 — chore: sync planning docs (PM_BOARD, PROGRESS, PROJECT_PLAN)
 Unpushed changes: no
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
