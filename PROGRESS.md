@@ -1,8 +1,8 @@
 # Knowbase — Development Progress
 
-Last updated: 2026-04-20 08:49 (HKT)
-Latest commit: 8f0cd79 — chore: sync PROGRESS.md commit hash to HEAD
-Unpushed changes: no
+Last updated: 2026-04-20 11:50 (HKT)
+Latest commit: 5209f71 — chore: sync PROGRESS.md commit hash to HEAD
+Unpushed changes: yes
 Deployed to Vercel: yes (auto-deploy from main, env vars updated 2026-04-19)
 
 ## Deployment Log
