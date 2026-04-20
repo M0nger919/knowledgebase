@@ -1,36 +1,38 @@
 # Knowbase — Project Plan
 
-## Phase 1: Foundation ✅
+## Phase 1: Foundation ✅ COMPLETE
 
 | Task | Status | Notes |
 |------|--------|-------|
-| Scaffold project (Next.js 15, TS, Tailwind) | ✅ Done | 28 files |
+| Scaffold project (Next.js 15, TS, Tailwind) | ✅ Done | 51 source files |
 | Supabase account + project | ✅ Done | `ytvvmxxglbulcyzmagsv` |
 | Database schema (4 tables + RLS + search) | ✅ Done | Executed in SQL Editor |
 | Auth middleware | ✅ Done | Supabase auth configured |
 | Resend email | ✅ Done | Integrated |
 | Cloudflare account | ✅ Done | DNS + CDN |
 | Domain name | ✅ Done | quantafelis.org |
-| GitHub repo | ✅ Done | 5 commits on main |
-| Vercel deployment | ✅ Done | Connected to repo |
+| GitHub repo | ✅ Done | M0nger919/knowledgebase |
+| Vercel deployment | ✅ Done | Connected to repo, auto-deploy |
 | Custom domain (quantafelis.org → Vercel) | ✅ Done | DNS pointed |
 | Stripe account | ⬜ Pending | Payments |
 | Sentry account | ⬜ Pending | Error monitoring |
 
-## Phase 2: AI Context Engine
+## Phase 2: AI Context Engine 🔄 IN PROGRESS
 
-| Task | Status | Notes |
-|------|--------|-------|
-| Product spec + user personas | ✅ Done | PRODUCT_SPEC.md |
-| Auth flow (signup/login) | ⬜ Pending | Email + magic link |
-| Ingestion engine (text, URL, file upload) | ⬜ Pending | Core input |
-| AI processing pipeline (chunk, summarize, tag) | ⬜ Pending | Background jobs |
-| Smart context engine (budget, retrieval) | ⬜ Pending | THE CORE |
-| Knowledge graph (relationships, visual) | ⬜ Pending | Auto-generated |
-| AI agent chat interface | ⬜ Pending | Natural language Q&A |
-| Dashboard (organized view + AI insights) | ⬜ Pending | Auto-spaces |
-| Agent integration API (REST) | ⬜ Pending | For external agents |
-| Context profile system | ⬜ Pending | Per-agent config |
+| Task | Status | Issue | Notes |
+|------|--------|-------|-------|
+| Product spec + user personas | ✅ Done | — | PRODUCT_SPEC.md |
+| Auth flow (signup/login) | ✅ Done | #1, #2 | Email + password + magic link |
+| Ingestion engine (text, URL, file) | ✅ Done | #3 | PDF, MD, TXT, HTML, DOCX |
+| AI chunking + summarization | ✅ Done | #10 | Semantic chunks, 4-layer summaries |
+| Entity extraction + tagging | ✅ Done | #11 | 5 entity types, auto-tags |
+| Background job queue + pipeline | ✅ Done | #13 | 6 job types, retry, priority |
+| Smart context engine | 🔄 In Progress | #12 | THE CORE — budget + retrieval |
+| Knowledge graph | ⬜ Pending | — | Sprint 3 |
+| AI chat interface | ⬜ Pending | — | Sprint 3 |
+| Dashboard | ⬜ Pending | — | Sprint 4 |
+| Agent integration API | ⬜ Pending | — | Sprint 4 |
+| Context profile system | ⬜ Pending | — | Sprint 4 |
 
 ## Phase 3: Launch
 - [ ] Beta testing
@@ -42,8 +44,9 @@
 - [ ] Add features based on feedback
 
 ## Key Links
+- **Live site:** https://quantafelis.org
 - **Supabase:** https://supabase.com/dashboard/project/ytvvmxxglbulcyzmagsv
-- **Domain:** quantafelis.org
 - **GitHub:** https://github.com/M0nger919/knowledgebase
-- **Vercel:** Connected (team_LOTvw9a8s35n6ET13z1HmTci / prj_Wo41phE1l4WmCsGcrY7q67iWji4S)
+- **Vercel:** Connected (auto-deploy on push)
 - **Product Spec:** PRODUCT_SPEC.md
+- **Dev Workflow:** DEV_TEAM_WORKFLOW.md

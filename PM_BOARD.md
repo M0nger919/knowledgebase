@@ -1,50 +1,51 @@
 # Knowbase — PM Board
 
-Last updated: 2026-04-18
+Last updated: 2026-04-19
 
-## Sprint 1: Foundation & Auth (Current)
+## Sprint 1: Foundation & Auth ✅ COMPLETE
 **Goal:** Get users signing in and ingesting content
-**Start:** 2026-04-18 | **Target end:** 2026-04-25
+**Start:** 2026-04-18 | **Completed:** 2026-04-19 (1 day ahead of schedule)
 
-### In Progress
-- [ ] Auth UI (signup/login with email + magic link)
-- [ ] Auth callback + session management
-- [ ] Protected routes (redirect to login if not authed)
-
-### Todo
-- [ ] Ingestion engine — text input
-- [ ] Ingestion engine — URL fetch and parse
-- [ ] Ingestion engine — file upload (PDF, Markdown)
-- [ ] Background processing queue setup
-
-### Blocked
-(None)
-
-### Done This Sprint
-- [x] Phase 1 infrastructure complete (all cloud platforms)
-- [x] Product spec + user personas written
-- [x] Database schema with vector search
+### Done
+- [x] Auth UI (signup/login with email + magic link) — #1
+- [x] Auth callback + session management — #2
+- [x] Protected routes (redirect to login if not authed) — #2
+- [x] Ingestion engine — text, URL, file upload — #3
+- [x] Background processing queue — #13
+- [x] QA pass — 5 bugs found and fixed — #5-9
+- [x] Custom 404 page, footer, form validation fixes
 
 ---
 
-## Sprint 2: AI Pipeline & Context Engine
+## Sprint 2: AI Pipeline & Context Engine 🔄 IN PROGRESS
 **Goal:** Content gets auto-processed into smart context chunks
-**Target start:** 2026-04-26 | **Target end:** 2026-05-09
+**Start:** 2026-04-19 | **Target end:** 2026-05-02
+
+### Done
+- [x] Semantic chunking algorithm — #10
+- [x] Hierarchical summary generation (4 layers) — #10
+- [x] Entity extraction (person, org, project, concept, date) — #11
+- [x] Auto-tagging and categorization — #11
+- [x] Auto-space suggestion — #11
+- [x] Background job queue (6 job types, retry, priority) — #13
+- [x] Pipeline orchestrator (chunk→summarize→embed→tag) — #13
+- [x] Code review — 2 blocking + 6 non-blocking fixes
+
+### In Progress
+- [ ] Smart context engine — token budget retrieval — #12
 
 ### Todo
-- [ ] Semantic chunking algorithm (split at thought boundaries)
-- [ ] Hierarchical summary generation (1-liner, summary, key points)
-- [ ] Entity extraction (people, projects, concepts)
-- [ ] Auto-tagging and categorization
-- [ ] Smart context engine — token budget retrieval
-- [ ] Relevance scoring (semantic + recency + relationships)
-- [ ] Context deduplication
+- [ ] Relevance scoring (semantic + recency + relationships) — #12
+- [ ] Context deduplication — #12
+
+### Blocked
+(None)
 
 ---
 
 ## Sprint 3: Knowledge Graph & Chat
 **Goal:** Users can chat with their knowledge and see relationships
-**Target start:** 2026-05-10 | **Target end:** 2026-05-23
+**Target start:** 2026-05-03 | **Target end:** 2026-05-16
 
 ### Todo
 - [ ] Relationship detection between documents
@@ -58,7 +59,7 @@ Last updated: 2026-04-18
 
 ## Sprint 4: Dashboard & API
 **Goal:** Polish UI, ship agent integration API
-**Target start:** 2026-05-24 | **Target end:** 2026-06-06
+**Target start:** 2026-05-17 | **Target end:** 2026-05-30
 
 ### Todo
 - [ ] Dashboard with auto-spaces view
@@ -72,7 +73,7 @@ Last updated: 2026-04-18
 
 ## Sprint 5: Launch Prep
 **Goal:** Monitoring, payments, polish, go live
-**Target start:** 2026-06-07 | **Target end:** 2026-06-20
+**Target start:** 2026-05-31 | **Target end:** 2026-06-13
 
 ### Todo
 - [ ] Sentry error monitoring
@@ -92,13 +93,15 @@ Last updated: 2026-04-18
 | 2026-04-18 | Core feature: Auto-organize + AI agent native | Differentiation from Notion/Confluence | Henry |
 | 2026-04-18 | Pivot to "Context layer for AI agents" | Bigger market, real pain point | Henry + AI |
 | 2026-04-18 | quantafelis.org domain | Registered | Henry |
+| 2026-04-19 | Parallel dev workflow (3 Senior Devs) | Speed + quality via subagent delegation | AI |
+| 2026-04-19 | SSRF protection on URL ingestion | Security review finding | Code Reviewer |
 
 ## Risks & Mitigations
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | OpenAI API costs for processing | Medium | Cache embeddings, batch processing, lazy summarization |
 | Context retrieval quality | High | User feedback loop, A/B test retrieval strategies |
-| Background job reliability | Medium | Use Supabase pg_net or external queue (BullMQ) |
+| Background job reliability | Medium | Supabase pg_net job queue with retry |
 | Scope creep | High | Strict sprint boundaries, PM enforces scope |
 
 ## Key Metrics to Track
@@ -108,3 +111,9 @@ Last updated: 2026-04-18
 - Token efficiency (relevant info per 1k tokens)
 - Active users
 - API calls from agents
+
+## Velocity
+| Sprint | Tasks Planned | Tasks Done | Duration |
+|--------|--------------|------------|----------|
+| Sprint 1 | 4 | 4 (+ 5 QA fixes) | 1 day |
+| Sprint 2 | 4 | 3 (1 remaining) | in progress |
